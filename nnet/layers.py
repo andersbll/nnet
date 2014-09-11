@@ -64,8 +64,8 @@ class Linear(Layer, ParamMixin):
         return np.dot(input, self.W) + self.b
 
     def bprop(self, output_grad):
-        outer = self.last_input[:, :, np.newaxis]*output_grad[:, np.newaxis, :]
-        self.dW = np.mean(outer, axis=0) - self.weight_decay*self.W
+        n = output_grad.shape[0]
+        self.dW = np.dot(self.last_input.T, output_grad)/n - self.weight_decay*self.W
         self.db = np.mean(output_grad, axis=0)
         return np.dot(output_grad, self.W.T)
 
